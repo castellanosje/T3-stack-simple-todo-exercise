@@ -6,7 +6,7 @@ import {
 } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./db";
-
+import EmailProvider from "next-auth/providers/email";
 /**
  * Module augmentation for `next-auth` types
  * Allows us to add custom properties to the `session` object
@@ -45,6 +45,24 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
+    EmailProvider({
+      server:{
+        host:process.env.EMAIL_SERVER||'http://localhost:3000',
+        port:587,
+        auth:{
+          user:"apikey",
+          pass: process.env.EMAIL_PASSWORD || "",
+        },
+      },
+      from: process.env.EMAIL_FROM || "default@default.com",
+      ...(process.env.NODE_ENV !== "production" ?
+          {
+            sendVerificationRequest({url}){
+              console.log("LOGIN LINK", url);
+            }
+          }
+        :{}),
+    })
     /**
      * ...add more providers here
      *

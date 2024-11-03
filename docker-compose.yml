@@ -1,0 +1,18 @@
+version: "0.0.1"
+services:
+  # MariaDB db service
+  db:
+    image: alpine/sqlite:latest
+    container_name: sqlite-db
+    ports:
+      - "8191:8191"
+    # environment:
+    #   MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    #   MARIADB_DATABASE: ${MARIADB_DATABASE}
+    #   MARIADB_USER_ROOT: ${MARIADB_USER_ROOT}
+    # env_file:
+    #   - ./.env
+    # networks:
+    #   - app-network
+    volumes:
+      - ./database/dump.sql:/docker-entrypoint-initdb.d/init.sql
